@@ -1,0 +1,4 @@
+sit-sound: ENTITY_HORSE_SADDLE
+sit-particle: CLOUD
+air-sit-message: "You cannot sit mid-air!"
+air-sit-particle: SMOKE_NORMAL

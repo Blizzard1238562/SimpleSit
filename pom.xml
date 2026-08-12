@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.Blizzard1238562</groupId>
+    <artifactId>vsimplesit</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>vsimplesit</name>
+
+    <properties>
+        <!--
+            Kept at 21 on purpose: Minecraft 1.21.x runs on Java 21, while
+            26.1+ requires Java 25. Compiling to Java 21 bytecode against
+            the 1.21.x Paper API keeps a single jar loadable on everything
+            from 1.21 through 26.2+, since newer JVMs still execute older
+            class files fine and Paper's plugin API stays backward
+            compatible. Only bump this if the code starts using API that
+            was added in 26.x.
+        -->
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--
+            Last release on the pre-2026 "1.21.x-R0.1-SNAPSHOT" versioning
+            scheme (May 2026). Deliberately NOT bumped to the 26.x line
+            (which uses a different coordinate format, e.g. 26.2.build.+)
+            since none of this plugin's code needs anything introduced
+            after 1.21, and staying here avoids forcing a Java 25 floor.
+        -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.11-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--
+            Was used by VSimpleSit's Modrinth update checker but was
+            missing from the original pom (and wasn't shaded into the
+            original jar either), so checkForUpdates() would have thrown
+            NoClassDefFoundError at runtime. Adding it so it actually
+            gets bundled by the shade plugin.
+        -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

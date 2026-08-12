@@ -1,0 +1,18 @@
+name: VSimpleSit
+version: '1.1'
+main: me.Blizzard1238562.vSimpleSit.VSimpleSit
+api-version: '1.21'
+folia-supported: true
+commands:
+  sit:
+    description: Sit on the ground or reload config
+    usage: /sit [reload]
+    permission: sit.use
+    aliases: []
+permissions:
+  sit.use:
+    description: Allows players to sit
+    default: true
+  sit.reload:
+    description: Allows reloading plugin config
+    default: op
